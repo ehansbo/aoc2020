@@ -10,8 +10,8 @@ main = do
 
 getSumPair :: Int -> [Int] -> Maybe (Int, Int)
 getSumPair sum (n1:ns) =
-    case (filter (== sum) $ map (+ n1) ns) of 
-        (n2:_) -> Just (n1, n2-n1)
+    case filter ((==) (sum - n1)) ns of 
+        (n2:_) -> Just (n1, n2)
         [] -> getSumPair sum ns
 getSumPair _ [] = Nothing
 
