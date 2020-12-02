@@ -2,7 +2,7 @@ import DayZero
 
 main :: IO ()
 main = do
-    nums <- fileIntegers "input_d1.txt" "\n"
+    nums <- splitAndReadFile "input_d1.txt" "\n"
     let Just (n1, n2) = getSumPair 2020 nums
     putStrLn $ show $ n1 * n2
     let (t1, t2, t3) = getSumTriples 2020 nums

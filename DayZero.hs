@@ -1,9 +1,8 @@
 module DayZero where
 import Data.List.Split
 
-fileIntegers :: String -> String -> IO [Int]
-fileIntegers name splitter = do
+splitAndReadFile :: Read a => String -> String -> IO [a]
+splitAndReadFile name splitter = do
         input <- readFile name
         let filtered = filter (\x -> x /= "") $ splitOn splitter input
-        let lines = map read filtered :: [Int]
-        return lines
+        return $ map read filtered
