@@ -9,6 +9,8 @@ instance Read Pwd where
             (i2, ' ':c:':':' ':pwd):[] = readsPrec 0 s1 :: [(Int, String)]
         in [(Pwd i1 i2 c pwd, "")]
 
+print :: Show a => a -> IO ()
+print = putStrLn . show 
 
 main :: IO ()
 main = do

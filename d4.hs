@@ -15,10 +15,10 @@ main = do
     putStrLn $ show $ length $ filter valid2 valid
 
 valid1 :: String -> Bool
-valid1 str = foldl (&&) True (map (\a -> a `isInfixOf` str) requiredFields)
+valid1 str = and $ map (\a -> a `isInfixOf` str) requiredFields
 
 valid2 :: String -> Bool
-valid2  = foldl (&&) True . map validateValues . splitOn " "
+valid2  = and . map validateValues . splitOn " "
 
 validateValues :: String -> Bool
 validateValues ('b':'y':'r':':':v) = read v >= 1920 && read v <= 2002
