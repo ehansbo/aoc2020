@@ -42,7 +42,7 @@ bagsContained :: Bag -> [Rule] -> Int
 bagsContained b rules = bagsContained' b rules rules
     where bagsContained' bag ((Rule bag' contains):rules) allRules
             | bag == bag' = sum (map (\c -> getNum c * (1 + bagsContained (getBag c) allRules)) contains)
-            | otherwise = bagsContained' bag rules allRules
+            | otherwise   = bagsContained' bag rules allRules
 
 partOf :: Bag -> [Contains] -> Bool
 partOf bag ((Contains i bag'):cs) = bag == bag' || bag `partOf` cs
