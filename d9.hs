@@ -1,6 +1,5 @@
 import DayZero
 import Data.List
-import System.IO.Unsafe
 
 main :: IO ()
 main = do
@@ -18,12 +17,12 @@ nonSummable _ [] = []
 
 
 containsPair :: Int -> [Int] -> Bool
-containsPair x (p:ps) = length (filter (== x) (map (+p) ps)) /= 0 || containsPair x ps
+containsPair x (p:ps) = length (filter (== (x-p)) ps) > 0 || containsPair x ps
 containsPair _ [] = False
 
 findContiguous :: Int -> [Int] -> [[Int]]
-findContiguous i xs = filter (\sub -> sum sub == i) (subLists xs)
+findContiguous i xs = filter ((== i) . sum) $ subLists $ filter (< i) xs
 
 subLists :: [a] -> [[a]]
 subLists [] = [[]]
-subLists (x:xs) = [x:subList | subList <- inits xs] ++ subLists xs
+subLists (x:xs) = subLists xs ++ [x:subList | subList <- inits xs]
