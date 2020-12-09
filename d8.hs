@@ -1,5 +1,4 @@
 import DayZero
-import System.IO.Unsafe
 import qualified Data.Set as S
 
 data Program = P { pos :: Int, acc :: Int, instr :: [Instruction] }
@@ -18,7 +17,7 @@ main :: IO ()
 main = do
     input <- splitAndReadFile "input_d8.txt" "\n"
     print $ programTerminates (initialize input)
-    print $ head $ dropWhile (\(a, b) -> not b) $ map (programTerminates . initialize) $ replaceInstr input
+    print $ head $ dropWhile (not . snd) $ map (programTerminates . initialize) $ replaceInstr input
 
 replaceInstr :: [Instruction] -> [[Instruction]]
 replaceInstr instr = replaceInstr' 0
