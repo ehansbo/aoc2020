@@ -1,13 +1,11 @@
 import DayZero
 import Data.List
-import System.IO.Unsafe
 import Data.MemoTrie
 
 main :: IO ()
 main = do
     input <- splitAndReadFile "input_d10.txt" "\n"
     let sorted = 0 : sort input ++ [maximum input + 3]
-    print sorted
     print $ findDifference 1 sorted * findDifference 3 sorted
     print $ findMemo sorted
 
