@@ -17,7 +17,7 @@ nonSummable _ [] = []
 
 
 containsPair :: Int -> [Int] -> Bool
-containsPair x (p:ps) = length (filter (== (x-p)) ps) > 0 || containsPair x ps
+containsPair x (p:ps) = length (filter (== x-p) ps) > 0 || containsPair x ps
 containsPair _ [] = False
 
 findContiguous :: Int -> [Int] -> [[Int]]
