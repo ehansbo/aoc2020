@@ -1,16 +1,16 @@
 import Data.List.Split
 import Data.MemoTrie
 
-data Pos = Empty | Occupied | Floor | Outside deriving (Eq)
+data Seat = Empty | Occupied | Floor | Outside deriving (Eq)
 type Point = (Int, Int)
-type Grid = Point -> Pos
+type Grid = Point -> Seat
 
-instance Show Pos where
+instance Show Seat where
     show Empty = "L"
     show Floor = "."
     show Occupied = "#"
 
-instance Read Pos where
+instance Read Seat where
     readsPrec _ "L" = [(Empty, "")]
     readsPrec _ "." = [(Floor, "")]
     readsPrec _ "#" = [(Occupied, "")]
@@ -20,21 +20,21 @@ main = do
     file <- readFile "input_d11.txt"
     let input = map (map read . chunksOf 1) $ filter (\x -> x /= "") $ splitOn "\n" file
     let grid = initialize input
-    let stable1 = findStable (tick n1 0 4) grid
-    let stable2 = findStable (tick n2 0 5) grid
+    let stable1 = findStable (tick n1 4) grid
+    let stable2 = findStable (tick n2 5) grid
     putStrLn $ showGrid stable1
     putStrLn $ "\n" ++ showGrid stable2
     print $ count Occupied stable1
     print $ count Occupied stable2
 
-count :: Pos -> Grid -> Int
+count :: Seat -> Grid -> Int
 count typ grid = length $ filter (== typ) $ map grid $ allPoints grid
 
-initialize :: [[Pos]] -> Grid
-initialize poss (x, y)
+initialize :: [[Seat]] -> Grid
+initialize seats (x, y)
     | x < 0 || y < 0 = Outside
-    | y >= length poss || x >= length (head poss) = Outside
-    | otherwise = poss !! y !! x
+    | y >= length seats || x >= length (head seats) = Outside
+    | otherwise = seats !! y !! x
     
 showGrid :: Grid -> String
 showGrid grid = showGrid' $ allPoints grid
@@ -47,17 +47,17 @@ findStable f grid
     | otherwise = findStable f grid'
                 where grid' = f grid
 
-tick :: (Grid -> Point -> [Pos]) -> Int -> Int -> Grid -> Grid
-tick neighbors e2o o2e grid = memo go
+tick :: (Grid -> Point -> [Seat]) -> Int -> Grid -> Grid
+tick neighbors o2e grid = memo go
     where go (x, y)
-            | grid (x, y) == Empty && length (filter (== Occupied) $ neighbors grid (x, y)) == e2o = Occupied
+            | grid (x, y) == Empty && length (filter (== Occupied) $ neighbors grid (x, y)) == 0 = Occupied
             | grid (x, y) == Occupied && length (filter (== Occupied) $ neighbors grid (x, y)) >= o2e = Empty
             | otherwise = grid (x, y)
 
-n1 :: Grid -> Point -> [Pos]
+n1 :: Grid -> Point -> [Seat]
 n1 grid (x, y) = [grid (x', y') | x' <- [x-1..x+1], y' <- [y-1..y+1], not (x' == x && y' == y)]  
 
-n2 :: Grid -> Point -> [Pos]
+n2 :: Grid -> Point -> [Seat]
 n2 grid (x, y) = map dir [(x, y) | x <- [-1..1], y <- [-1..1], (x, y) /= (0, 0)]
     where dir (dx, dy) = if dropped == [] then Empty else head dropped
             where dropped = dropWhile (== Floor) $ takeWhile (/= Outside) $ map grid $ zip [x+dx,x+2*dx..] [y+dy, y+2*dy..]
