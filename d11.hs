@@ -19,7 +19,7 @@ main :: IO ()
 main = do
     file <- readFile "input_d11.txt"
     let input = map (map read . chunksOf 1) $ filter (\x -> x /= "") $ splitOn "\n" file
-    let grid = initialize input
+    let grid = memo $ initialize input
     let stable1 = findStable (tick n1 4) grid
     let stable2 = findStable (tick n2 5) grid
     putStrLn $ showGrid stable1
@@ -45,7 +45,7 @@ findStable :: (Grid -> Grid) -> Grid -> Grid
 findStable f grid
     | equals grid' grid = grid
     | otherwise = findStable f grid'
-                where grid' = f grid
+        where grid' = f grid
 
 tick :: (Grid -> Point -> [Seat]) -> Int -> Grid -> Grid
 tick neighbors o2e grid = memo go
