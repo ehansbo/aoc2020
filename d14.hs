@@ -1,7 +1,6 @@
 import DayZero
 import Control.Monad.State.Strict
 import System.IO.Unsafe
-import qualified Data.Set as S
 import qualified Data.Map as M
 data Instruction = Mem Int Int | Mask String deriving (Show)
 type Memory = M.Map Int Int
