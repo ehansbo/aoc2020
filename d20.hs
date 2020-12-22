@@ -12,10 +12,10 @@ data Grid = Grid {
 
 data Dir = U | L | R | D
 
--- is always a square
 size :: Grid -> Int
 size (Grid i f) = size' f 
 
+-- is always a square. Name is slightly misleading, actually returns the max x (and max y) 
 size' :: ((Int, Int) -> Block) -> Int
 size' f = length (takeWhile (\x -> f (x, 0) /= Outside) [0..]) - 1 
 
@@ -62,7 +62,7 @@ findSeaMonsters grid = length $ filter (\(x, y) -> seaMonsterAt (x, y) grid) [(x
 seaMonsterAt :: (Int, Int) -> Grid -> Bool
 seaMonsterAt (x, y) (Grid _ f) =
     let h (a, b) = f (x+a, y+b) == Hash
-    in and $ map (\(x', y') -> h (x', y')) seaMonsterCoords
+    in and $ map h seaMonsterCoords
 
 getBigGrid :: [[Grid]] -> Grid
 getBigGrid matrix = Grid 1337 (\(x, y) -> 
@@ -108,6 +108,7 @@ alignTo toAlign target =
 areAligned :: Grid -> Grid -> Bool
 areAligned g1 g2 = getEdge U g1 == getEdge D g2 || getEdge L g1 == getEdge R g2 || getEdge R g1 == getEdge L g2 || getEdge D g1 == getEdge U g2
 
+-- aligns a grid to have one neighbor to the right and another neighbor down.
 alignFirst :: Grid -> Grid -> Grid -> Grid
 alignFirst toAlign targetR targetD = 
     let possibleTargetsR = map (getEdge L) (allChoices targetR)

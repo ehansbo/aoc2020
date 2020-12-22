@@ -22,17 +22,17 @@ run file = do
 
 
 matches :: Rule -> String -> Bool
-matches rule str = 1 == (length $ filter (\(b, remainder) -> b && length remainder == 0) $ matchPartial rule str)
+matches rule str = 1 <= (length $ filter (\(b, remainder) -> b && length remainder == 0) $ matchPartial rule str)
 
 matchPartial :: Rule -> String -> [(Bool, String)]
 matchPartial (C c) [] = [(False, [])]
-matchPartial (C c) str = [(str !! 0 == c, tail str)]
+matchPartial (C c) (c':str) = [(c' == c, str)]
 matchPartial (Or r1 r2) str = matchPartial r1 str ++ matchPartial r2 str
 matchPartial (Seq rules) str = matchSeq rules str
 
 matchSeq :: [Rule] -> String -> [(Bool, String)]
 matchSeq (rule:rules) str = let allMatches = filter ((== True) . fst) (matchPartial rule str) in
-    concat (map (\(_, remainder) -> matchSeq rules remainder) allMatches)
+    concat $ map (\(_, remainder) -> matchSeq rules remainder) allMatches
 matchSeq [] str = [(True, str)]
 
 resolve :: (Int -> Rule) -> Int -> Rule
